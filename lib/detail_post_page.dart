@@ -105,10 +105,10 @@ class DetailPostPage extends StatelessWidget {
   // 팔로우
   void _follow() {
     Firestore.instance.collection('following').document(user.email)
-        .setData({document['email']: true});
+        .setData({document['email']: true}, merge: true);
 
     Firestore.instance.collection('follower').document(document['email'])
-        .setData({user.email: true});
+        .setData({user.email: true}, merge: true);
   }
 
   // 언팔로우
