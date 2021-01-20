@@ -14,7 +14,7 @@ class RootPage extends StatelessWidget {
 
   Widget _handleCurrentScreen() {
     return StreamBuilder(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting) {
           return LoadingPage();

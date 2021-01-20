@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DetailPostPage extends StatelessWidget {
   final DocumentSnapshot document;
-  final FirebaseUser user;
+  final User user;
 
   DetailPostPage(this.document, this.user);
 
@@ -51,8 +50,8 @@ class DetailPostPage extends StatelessWidget {
                               if(!snapshot.hasData) {
                                 return Text('로딩중');
                               }
-                              var data = snapshot.data.data;
-                              if(data == null || data[document['email']] == null || data[document['email']] == false) {
+                              var data = snapshot.data.data();
+                              if(data == null){// || data[document['email']] == null || data[document['email']] == false) {
                                 //document['email']
                                 return GestureDetector(
                                   onTap: _follow,
@@ -85,7 +84,7 @@ class DetailPostPage extends StatelessWidget {
             ),
           ),
           Hero(
-            tag: document.documentID,
+            tag: document.id,
             child: Image.network(
               document['photoUrl'],
               fit: BoxFit.cover,
@@ -104,25 +103,25 @@ class DetailPostPage extends StatelessWidget {
 
   // 팔로우
   void _follow() {
-    Firestore.instance.collection('following').document(user.email)
-        .setData({document['email']: true}, merge: true);
+    FirebaseFirestore.instance.collection('following').doc(user.email)
+        .set({document['email']: true});
 
-    Firestore.instance.collection('follower').document(document['email'])
-        .setData({user.email: true}, merge: true);
+    FirebaseFirestore.instance.collection('follower').doc(document['email'])
+        .set({user.email: true});
   }
 
   // 언팔로우
   void _unfollow() {
-    Firestore.instance.collection('following').document(user.email)
+    FirebaseFirestore.instance.collection('following').doc(user.email)
         .delete();//.setData({document['email']: false});
 
-    Firestore.instance.collection('follower').document(document['email'])
+    FirebaseFirestore.instance.collection('follower').doc(document['email'])
         .delete();//.setData({user.email: false});
   }
 
   // 팔로잉 상태를 얻는 스트림
   Stream<DocumentSnapshot> _followingStream() {
-    return Firestore.instance
-        .collection('following').document(user.email).snapshots();
+    return FirebaseFirestore.instance
+        .collection('following').doc(user.email).snapshots();
   }
 }

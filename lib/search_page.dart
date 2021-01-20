@@ -7,7 +7,7 @@ import 'create_page.dart';
 import 'detail_post_page.dart';
 
 class SearchPage extends StatelessWidget {
-  final FirebaseUser user;
+  final User user;
 
   SearchPage(this.user);
 
@@ -32,7 +32,7 @@ class SearchPage extends StatelessWidget {
     print('search_page created');
     return Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('post').snapshots(),
+        stream: FirebaseFirestore.instance.collection('post').snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) {
             return Center(child: CircularProgressIndicator(),);
@@ -43,9 +43,9 @@ class SearchPage extends StatelessWidget {
                 childAspectRatio: 1.0,
                 mainAxisSpacing: 1.0,
                 crossAxisSpacing: 1.0),
-            itemCount: snapshot.data.documents.length,
+            itemCount: snapshot.data.docs.length,
             itemBuilder: (BuildContext context, int index) {
-              return _buildListItem(context, snapshot.data.documents[index]);
+              return _buildListItem(context, snapshot.data.docs[index]);
             },
           );
         }
@@ -64,7 +64,7 @@ class SearchPage extends StatelessWidget {
 
   Widget _buildListItem(context, DocumentSnapshot document) {
     return Hero(
-      tag: document.documentID,
+      tag: document.id,
       child: Material(
         child: InkWell(
           onTap: () {

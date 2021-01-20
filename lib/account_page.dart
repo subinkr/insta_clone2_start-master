@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AccountPage extends StatelessWidget {
-  final FirebaseUser user;
+  final User user;
 
   AccountPage(this.user);
 
@@ -46,7 +46,7 @@ class AccountPage extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () => print('이미지 클릭'),
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoUrl),
+                      backgroundImage: NetworkImage(user.photoURL),
                     ),
                   ),
                 ),
@@ -96,7 +96,7 @@ class AccountPage extends StatelessWidget {
             builder: (context, snapshot) {
               var post = 0;
               if(snapshot.hasData) {
-                post = snapshot.data.documents.length;
+                post = snapshot.data.docs.length;
               }
               return Text(
                 '$post\n게시물',
@@ -114,10 +114,10 @@ class AccountPage extends StatelessWidget {
               var follower = 0;
               var filteredMap;
               if(snapshot.hasData) {
-                if(snapshot.data.data == null) {
+                if(snapshot.data.data() == null) {
                   filteredMap = [];
                 } else {
-                  filteredMap = snapshot.data.data;
+                  filteredMap = snapshot.data.data();
                 }
                 follower = filteredMap.length;
               }
@@ -138,10 +138,10 @@ class AccountPage extends StatelessWidget {
               var following = 0;
               var filteredMap;
               if(snapshot.hasData) {
-                if(snapshot.data.data == null) {
+                if(snapshot.data.data() == null) {
                   filteredMap = [];
                 } else {
-                  filteredMap = snapshot.data.data;
+                  filteredMap = snapshot.data.data();
                 }
                 following = filteredMap.length;
               }
@@ -179,18 +179,18 @@ class AccountPage extends StatelessWidget {
 
   // 내 게시물 가져오기
   Stream<QuerySnapshot> _postStream() {
-    return Firestore.instance.collection('post')
+    return FirebaseFirestore.instance.collection('post')
         .where('email', isEqualTo: user.email)
         .snapshots();
   }
   // 팔로잉 가져오기
   Stream<DocumentSnapshot> _followingStream() {
-    return Firestore.instance.collection('following')
-        .document(user.email).snapshots();
+    return FirebaseFirestore.instance.collection('following')
+        .doc(user.email).snapshots();
   }
   // 팔로워 가져오기
   Stream<DocumentSnapshot> _followerStream() {
-    return Firestore.instance.collection('follower')
-        .document(user.email).snapshots();
+    return FirebaseFirestore.instance.collection('follower')
+        .doc(user.email).snapshots();
   }
 }

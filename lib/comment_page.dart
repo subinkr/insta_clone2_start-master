@@ -23,7 +23,7 @@ class CommentPage extends StatelessWidget {
             );
           }
           return ListView(
-            children: snapshot.data.documents.map((doc) {
+            children: snapshot.data.docs.map((doc) {
               return ListTile(
                 leading: Text(doc['writer']),
                 title: Text(doc['comment']),
@@ -36,9 +36,9 @@ class CommentPage extends StatelessWidget {
   }
 
   Stream<QuerySnapshot> _commentStream() {
-    return Firestore.instance
+    return FirebaseFirestore.instance
         .collection('post')
-        .document(document.documentID)
+        .doc(document.id)
         .collection('comment')
         .snapshots();
   }
