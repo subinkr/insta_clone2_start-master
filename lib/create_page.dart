@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreatePage extends StatefulWidget {
-  final FirebaseUser user;
+  final User user;
 
   CreatePage(this.user);
 
@@ -73,19 +73,19 @@ class _CreatePageState extends State<CreatePage> {
     final firebaseStorageRef = FirebaseStorage.instance
     .ref().child('post').child('${DateTime.now().millisecondsSinceEpoch}');
     // 파일 업로드
-    final task = firebaseStorageRef.putFile(_image, StorageMetadata(contentType: 'image/png'),);
+    final task = firebaseStorageRef.putFile(_image, SettableMetadata(contentType: 'image/png'),);
     // 완료까지 기다림
-    final storageTaskSnapshot = await task.onComplete;
+    final storageTaskSnapshot = await task;
     // 업로드 완료 후 url
     final downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
     // 문서 작성
-    await Firestore.instance.collection('post').add(
+    await FirebaseFirestore.instance.collection('post').add(
       {
         'contents' : textEditingController.text,
         'displayName' : widget.user.displayName,
         'email' : widget.user.email,
         'photoUrl' : downloadUrl,
-        'userPhotoUrl': widget.user.photoUrl
+        'userPhotoUrl': widget.user.photoURL
       }
     );
 
