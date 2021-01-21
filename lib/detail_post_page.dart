@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +53,7 @@ class DetailPostPage extends StatelessWidget {
                                 return Text('로딩중');
                               }
                               var data = snapshot.data.data();
-                              if(data == null){// || data[document['email']] == null || data[document['email']] == false) {
+                              if(data == null || data[document['email']] == null || data[document['email']] == false) {
                                 //document['email']
                                 return GestureDetector(
                                   onTap: _follow,
@@ -104,10 +106,10 @@ class DetailPostPage extends StatelessWidget {
   // 팔로우
   void _follow() {
     FirebaseFirestore.instance.collection('following').doc(user.email)
-        .set({document['email']: true});
+        .set({document['email']: true}, SetOptions(merge: true));
 
     FirebaseFirestore.instance.collection('follower').doc(document['email'])
-        .set({user.email: true});
+        .set({user.email: true}, SetOptions(merge: true));
   }
 
   // 언팔로우
