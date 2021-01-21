@@ -118,7 +118,8 @@ class AccountPage extends StatelessWidget {
                 if(snapshot.data.data() == null) {
                   filteredMap = [];
                 } else {
-                  filteredMap = snapshot.data.data();
+                  filteredMap = snapshot.data.data()
+                    ..removeWhere((key, value) => value == false);
                 }
                 follower = filteredMap.length;
               }
@@ -142,7 +143,8 @@ class AccountPage extends StatelessWidget {
                 if(snapshot.data.data() == null) {
                   filteredMap = [];
                 } else {
-                  filteredMap = snapshot.data.data();
+                  filteredMap = snapshot.data.data()
+                    ..removeWhere((key, value) => value == false);
                 }
                 following = filteredMap.length;
               }

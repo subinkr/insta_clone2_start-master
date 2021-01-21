@@ -115,10 +115,10 @@ class DetailPostPage extends StatelessWidget {
   // 언팔로우
   void _unfollow() {
     FirebaseFirestore.instance.collection('following').doc(user.email)
-        .delete();//.setData({document['email']: false});
+        .set({document['email']: false}, SetOptions(merge: true));
 
     FirebaseFirestore.instance.collection('follower').doc(document['email'])
-        .delete();//.setData({user.email: false});
+        .set({user.email: false}, SetOptions(merge: true));
   }
 
   // 팔로잉 상태를 얻는 스트림
